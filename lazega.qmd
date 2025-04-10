@@ -1,12 +1,82 @@
 ---
 title: "A very short network introduction using data on Lawyers"
 format: live-html
+webr: 
+  packages:
+    - dplyr
+    - network
+    - igraph
+    - sna
+    - statnet
+    - tidygraph
+    - ggraph
+    - ggplot2
+    - sand
 ---
+
+```{r echo = FALSE}
+# The sand package which has the Lazega data is not super up to date, so in the future, we might have to replace this with having the data directly in there, as for Python.
+```
 
 The data is from Lazega 1992
 
+
+::: {.panel-tabset group="language"}
+
+# R
+
 ```{webr}
-fit = lm(mpg ~ am, data = mtcars)
-summary(fit)
-plot(fit)
+plot(lazega)
+
 ```
+
+
+# Python
+
+```{pyodide}
+for x in range(1, 6):
+  print(10 + x)
+```
+
+
+:::
+
+
+## Some descriptive statistics
+
+We can compute some basic statistics on the network. 
+The following are some of the most common ones:
+
+::: {.panel-tabset group="language"}
+
+# R
+
+```{webr}
+mean_distance(lazega)
+
+transitivity(lazega)
+
+diameter(lazega)
+
+igraph::assortativity(lazega, igraph::degree(lazega))
+igraph::assortativity(lazega, igraph::degree(lazega, mode = "out"))
+igraph::assortativity(lazega, igraph::degree(lazega, mode = "in"))
+
+igraph::degree(lazega)
+igraph::degree(lazega, mode = "out")
+igraph::degree(lazega, mode = "in")
+
+igraph::betweenness(lazega)
+```
+
+
+# Python
+
+```{pyodide}
+for x in range(1, 6):
+  print(10 + x)
+```
+
+
+:::
+

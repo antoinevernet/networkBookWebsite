@@ -1,11 +1,5 @@
 ---
-title: "networkBookWebsite2"
+title: "Book Website"
 ---
 
-This is a Quarto website.
-
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
-
-```{r}
-1 + 1
-```
+This is a proof of concept for the book's website built with Quarto.

@@ -49,3 +49,7 @@ po/*~
 rsconnect/
 
 /.quarto/
+
+# Project specific
+_extensions/
+_site/

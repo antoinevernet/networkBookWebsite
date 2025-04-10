@@ -2,8 +2,4 @@
 title: "About"
 ---
 
-About this site
-
-```{r}
-1 + 1
-```
+Here we can put things about the book, the exercises and us. Not necessarily in this order.
