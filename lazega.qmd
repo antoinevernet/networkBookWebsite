@@ -1,0 +1,12 @@
+---
+title: "A very short network introduction using data on Lawyers"
+format: live-html
+---
+
+The data is from Lazega 1992
+
+```{webr}
+fit = lm(mpg ~ am, data = mtcars)
+summary(fit)
+plot(fit)
+```
