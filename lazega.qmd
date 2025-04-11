@@ -1,5 +1,5 @@
 ---
-title: "A very short network introduction using data on Lawyers"
+title: "An introduction to network analysis"
 format: live-html
 resources:
   - data/lazega_lawyers
