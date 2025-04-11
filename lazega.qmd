@@ -1,8 +1,11 @@
 ---
 title: "A very short network introduction using data on Lawyers"
 format: live-html
+resources:
+  - data/lazega_lawyers
 webr: 
   packages:
+    - tidyverse
     - dplyr
     - network
     - igraph
@@ -12,43 +15,128 @@ webr:
     - ggraph
     - ggplot2
     - sand
+bibliography: references.bib
+csl: amj.csl
 ---
 
 ```{r echo = FALSE}
 # The sand package which has the Lazega data is not super up to date, so in the future, we might have to replace this with having the data directly in there, as for Python.
 ```
 
-The data is from Lazega 1992
+This pages uses the data from @lazega2001 to demonstrate some simple social network measurements. I use CSVs, but the data is also available in the `sand` package
 
+# Loading data
 
 ::: {.panel-tabset group="language"}
-
 # R
 
 ```{webr}
-plot(lazega)
+adv <- read_delim("data/lazega_lawyers/ELadv.dat", delim = " ", col_names = FALSE)
+
+adv <- adv |> 
+  select(-X1)
+
+adv <- as.matrix(adv)
+
+#Attributes
+
+#att <- read_delim("data/lazega_lawyers/ELattr.dat", delim = " ", col_names = FALSE, trim_ws = TRUE,   skip_empty_rows = TRUE)
+
+att <- read_table("data/lazega_lawyers/ELattr.dat", 
+                  col_names = c(" seniority", "status", "gender", "office", "tenure", "age",
+                                "practice", "law_school"), 
+                  col_types = cols(.default = col_integer()))
 
 ```
 
+The warning we get when loading the attributes data using R is because the 4th row of this datafile has a trailing whitespace which read_table (or read_delim, had we used this function) interprets as a ninth column.
 
 # Python
 
 ```{pyodide}
-for x in range(1, 6):
-  print(10 + x)
+import pandas as pd
+import numpy as np
+
+# Load the adjacency matrix (ELadv.dat)
+adv = pd.read_csv("data/lazega_lawyers/ELadv.dat", sep=r'\s+', header=None)
+
+# Drop the first column (equivalent to select(-X1))
+adv = adv.drop(columns=0)
+
+# Convert to a NumPy matrix
+adv = adv.to_numpy()
+
+# Load the attributes (ELattr.dat)
+column_names = [
+    "seniority_code", "status_code", "gender_code", "office_code",
+    "tenure", "age", "practice_code", "law_school_code"
+]
+
+att = pd.read_csv("data/lazega_lawyers/ELattr.dat", sep=r'\s+', header=None, names=column_names)
+```
+:::
+
+# Recoding the data
+
+The data is numerically coded, making it difficult to read by a human. Let's make our life easier by recoding the data.
+
+::: {.panel-tabset group="language"}
+# R
+
+```{webr}
+
+att <- att |> 
+  mutate(
+         status = recode(status, `1` = "partner", `2` = "associate", `3` = "paralegal", `4` = "other"),
+         gender = recode(gender, `1` = "man", `2` = "woman"),
+         office = recode(office, `1` = "Boston", `2` = "Hartford", `3` = "Providence"),
+         practice = recode(practice, `1` = "litigation", `2` = "corporate"),
+         law_school = recode(law_school, `1` = "Harvard or Yale", `2` = "Ucon", `3` = "other")
+         )
+
 ```
 
+# Python
 
+```{pyodide}
+att = att.assign(
+    seniority = att["seniority_code"],  # preserve original label
+    status = att["status_code"].map({
+        1: "partner",
+        2: "associate",
+        3: "paralegal",
+        4: "other"
+    }),
+    gender = att["gender_code"].map({
+        1: "man",
+        2: "woman"
+    }),
+    office = att["office_code"].map({
+        1: "Boston",
+        2: "Hartford",
+        3: "Providence"
+    }),
+    practice = att["practice_code"].map({
+        1: "litigation",
+        2: "corporate"
+    }),
+    law_school = att["law_school_code"].map({
+        1: "Harvard or Yale",
+        2: "Ucon",
+        3: "other"
+    })
+)
+```
 :::
 
 
-## Some descriptive statistics
+# Some descriptive statistics
 
-We can compute some basic statistics on the network. 
-The following are some of the most common ones:
+We can compute some basic statistics on the network. The following are some of the most common ones:
+
+
 
 ::: {.panel-tabset group="language"}
-
 # R
 
 ```{webr}
@@ -69,14 +157,10 @@ igraph::degree(lazega, mode = "in")
 igraph::betweenness(lazega)
 ```
 
-
 # Python
 
 ```{pyodide}
 for x in range(1, 6):
   print(10 + x)
 ```
-
-
 :::
-
