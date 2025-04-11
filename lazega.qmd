@@ -68,11 +68,19 @@ adv = adv.to_numpy()
 
 # Load the attributes (ELattr.dat)
 column_names = [
-    "seniority_code", "status_code", "gender_code", "office_code",
-    "tenure", "age", "practice_code", "law_school_code"
+    "seniority", "status_c", "gender_c", "office_c",
+    "tenure", "age", "practice_c", "law_school_c"
 ]
 
 att = pd.read_csv("data/lazega_lawyers/ELattr.dat", sep=r'\s+', header=None, names=column_names)
+
+# We need to convert string (columns with leading 0s) to integers
+cols_to_int = [
+    "status_c", "gender_c", "office_c",
+    "practice_c", "law_school_c"
+]
+
+att[cols_to_int] = att[cols_to_int].astype(int)
 ```
 :::
 
@@ -100,32 +108,33 @@ att <- att |>
 
 ```{pyodide}
 att = att.assign(
-    seniority = att["seniority_code"],  # preserve original label
-    status = att["status_code"].map({
+    status = att["status_c"].map({
         1: "partner",
-        2: "associate",
-        3: "paralegal",
-        4: "other"
+        2: "associate"
     }),
-    gender = att["gender_code"].map({
+    gender = att["gender_c"].map({
         1: "man",
         2: "woman"
     }),
-    office = att["office_code"].map({
+    office = att["office_c"].map({
         1: "Boston",
         2: "Hartford",
         3: "Providence"
     }),
-    practice = att["practice_code"].map({
+    practice = att["practice_c"].map({
         1: "litigation",
         2: "corporate"
     }),
-    law_school = att["law_school_code"].map({
+    law_school = att["law_school_c"].map({
         1: "Harvard or Yale",
         2: "Ucon",
         3: "other"
     })
 )
+
+att = att.drop(columns=[
+    "status_c", "gender_c", "office_c", "practice_c", "law_school_c"
+])
 ```
 :::
 
