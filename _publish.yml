@@ -1,0 +1,4 @@
+- source: project
+  quarto-pub:
+    - id: 7c6f7a06-e02c-4aab-8ba5-ae28b4c997bc
+      url: 'https://antoinevernet.quarto.pub/book-website'
