@@ -23,7 +23,7 @@ csl: amj.csl
 # The sand package which has the Lazega data is not super up to date, so in the future, we might have to replace this with having the data directly in there, as for Python.
 ```
 
-This pages uses the data from @lazega2001 to demonstrate some simple social network measurements. I use CSVs, but the data is also available in the `sand` package
+This pages uses the data from @lazega2001 to demonstrate some simple social network measurements. I use CSVs in this example to demonstrate how one load and wrangle the data before analysis, but the data is also available in a ready to analyse format in the `sand` package for R.
 
 # Loading data
 
