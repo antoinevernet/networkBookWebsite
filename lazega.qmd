@@ -36,7 +36,7 @@ adv <- read_delim("data/lazega_lawyers/ELadv.dat", delim = " ", col_names = FALS
 adv <- adv |> 
   select(-X1)
 
-#adv <- as.matrix(adv)
+adv <- as.matrix(adv)
 
 #Attributes
 
