@@ -36,14 +36,14 @@ adv <- read_delim("data/lazega_lawyers/ELadv.dat", delim = " ", col_names = FALS
 adv <- adv |> 
   select(-X1)
 
-adv <- as.matrix(adv)
+#adv <- as.matrix(adv)
 
 #Attributes
 
 #att <- read_delim("data/lazega_lawyers/ELattr.dat", delim = " ", col_names = FALSE, trim_ws = TRUE,   skip_empty_rows = TRUE)
 
 att <- read_table("data/lazega_lawyers/ELattr.dat", 
-                  col_names = c(" seniority", "status", "gender", "office", "tenure", "age",
+                  col_names = c("seniority", "status", "gender", "office", "tenure", "age",
                                 "practice", "law_school"), 
                   col_types = cols(.default = col_integer()))
 
@@ -150,8 +150,19 @@ The adjacency matrix is a square matrix used to represent a directed graph. The 
 ```{webr}
 library(igraph)
 
-lazega <- igraph::graph_from_data_frame(adv, mode = "directed", 
-                                        vertices = att)
+
+adv <- igraph::graph_from_adjacency_matrix(adv,
+                                        mode = "directed")
+# Let's use set_vertex_attr to set the attributes (usually, I would prefer to use an edgelist and then set the attributes directly when creating the graph, but since this data comes as an adjacency matrix, this is more direct, albeit not shorter or less error prone)
+adv <- set_vertex_attr(adv, "seniority", value = att$seniority)
+adv <- set_vertex_attr(adv, "status", value = att$status)
+adv <- set_vertex_attr(adv, "gender", value = att$gender)
+adv <- set_vertex_attr(adv, "office", value = att$office)
+adv <- set_vertex_attr(adv, "tenure", value = att$tenure)
+adv <- set_vertex_attr(adv, "age", value = att$age)
+adv <- set_vertex_attr(adv, "practice", value = att$practice)
+adv <- set_vertex_attr(adv, "law_school", value = att$law_school)
+
 
 summary(lazega)
 
@@ -176,19 +187,20 @@ igraph.summary(lazega)
 # R
 
 ```{webr}
+
 library(ggraph)
 
 library(tidygraph)
 
-lazega_tidy <- lazega |> 
+lazega_tidy <- adv |>
   as_tbl_graph()
 
 ggraph(lazega_tidy, layout = "fr") +
-  geom_edge_link(aes(edge_alpha = weight), show.legend = FALSE) +
-  geom_node_point(aes(color = status), size = 5) +
-  geom_node_text(aes(label = name), repel = TRUE) +
+  geom_edge_link(show.legend = FALSE) +
+  geom_node_point(aes(colour = status, shape = gender), size = 5) +
   theme_graph() +
-  labs(title = "Lazega lawyers network")
+  labs(title = "Lawyers network from Lazega (2001)")
+
 
 ```
 
