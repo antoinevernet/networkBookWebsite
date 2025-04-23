@@ -60,7 +60,7 @@ import numpy as np
 # Load the adjacency matrix (ELadv.dat)
 adv = pd.read_csv("data/lazega_lawyers/ELadv.dat", sep=r'\s+', header=None)
 
-# Drop the first column (equivalent to select(-X1))
+# Drop the first column (equivalent to select(-X1) in R)
 adv = adv.drop(columns=0)
 
 # Convert to a NumPy matrix
@@ -137,6 +137,67 @@ att = att.drop(columns=[
 ])
 ```
 :::
+
+
+# Creating the network
+
+The adjacency matrix is a square matrix used to represent a directed graph. The elements of the matrix indicate whether pairs of vertices are adjacent or not in the graph.
+
+
+::: {.panel-tabset group="language"}
+# R
+
+```{webr}
+library(igraph)
+
+lazega <- igraph::graph_from_data_frame(adv, mode = "directed", 
+                                        vertices = att)
+
+summary(lazega)
+
+```
+
+# Python
+
+```{pyodide}
+import igraph as igraph
+
+lazega = igraph.Graph.data.frame(adv, mode="directed", vertices = att)
+
+igraph.summary(lazega)
+
+```
+:::
+
+# Visualising the network
+
+::: {.panel-tabset group="language"}
+
+# R
+
+```{webr}
+library(ggraph)
+
+library(tidygraph)
+
+lazega_tidy <- lazega |> 
+  as_tbl_graph()
+
+ggraph(lazega_tidy, layout = "fr") +
+  geom_edge_link(aes(edge_alpha = weight), show.legend = FALSE) +
+  geom_node_point(aes(color = status), size = 5) +
+  geom_node_text(aes(label = name), repel = TRUE) +
+  theme_graph() +
+  labs(title = "Lazega lawyers network")
+
+```
+
+# Python
+
+```{pyodide}
+
+
+```
 
 
 # Some descriptive statistics
