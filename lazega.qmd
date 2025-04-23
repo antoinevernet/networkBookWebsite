@@ -201,7 +201,7 @@ ggraph(lazega_tidy, layout = "fr") +
   theme_graph(base_family = "sans") +
   labs(title = "Lawyers network from Lazega (2001)")
 
-# the use of base_family is specific to deploying this in webR because only limited fonts are available
+# the use of base_family = "sans" is specific to deploying this in webR because only limited fonts are available, if you run this on your machine, you can just use theme_graph()
 
 
 ```
